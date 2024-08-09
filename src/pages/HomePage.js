@@ -1,6 +1,6 @@
 import { Container } from 'reactstrap';
 import DisplayList from '../features/display/DisplayList';
-import SubHeader from '../features/comments/SubHeader';
+import SubHeader from '../components/SubHeader';
 
 const HomePage = () => {
     return (
