@@ -4,18 +4,36 @@ import { selectCampsiteById } from '../features/campsites/campsitesSlice';
 import CampsiteDetail from '../features/campsites/CampsiteDetail';
 import CommentsList from '../features/comments/commentsList';
 import SubHeader from '../components/SubHeader';
+import { useSelector } from 'react-redux';
+import Error from '../components/Error';
+import Loading from '../components/Loading';
+
 
 const CampsiteDetailPage = () => {
     const { campsiteId } = useParams();
-    const campsite = selectCampsiteById(campsiteId);
+    const campsite = useSelector(selectCampsiteById(campsiteId));
+    console.log('campsite:', campsite);
+    
+    const isLoading = useSelector((state) => state.campsites.isLoading);
+    const errMsg = useSelector((state) => state.campsites.errMsg);
+    let content = null;
 
-    return (
-        <Container>
-            <Row>
-                <SubHeader current={campsite.name} detail={true} />
+    if (isLoading) {
+        content = <Loading />;
+    } else if (errMsg) {
+        content = <Error errMsg={errMsg} />;
+    } else {
+        content = (
+            <>
                 <CampsiteDetail campsite={campsite} />
                 <CommentsList campsiteId={campsiteId} />
-            </Row>
+            </>
+        );
+    }
+    return (
+        <Container>
+            {campsite && <SubHeader current={campsite.name} detail={true} />}
+            <Row>{content}</Row>
         </Container>
     );
 };
